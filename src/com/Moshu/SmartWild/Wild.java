@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -32,32 +33,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class Wild {
+public class Wild implements Listener {
 
     private static Main plugin;
 
-    private final static int small = 5000;
-    private final static int medium = 8000;
-    private final static int big = 13000;
+    private final static int small = plugin.getConfig().getInt("wild.distances.short.distance");
+    private final static int medium = plugin.getConfig().getInt("wild.distances.medium.distance");
+    private final static int big = plugin.getConfig().getInt("wild.distances.long.distance");
 
-    private final static int pricesmall = 500;
-    private final static int pricemedium = 1500;
-    private final static int pricebig = 2500;
+    private final static int pricesmall = plugin.getConfig().getInt("wild.distances.short.price");
+    private final static int pricemedium = plugin.getConfig().getInt("wild.distances.medium.price");
+    private final static int pricebig = plugin.getConfig().getInt("wild.distances.long.price");
 
-    private final static int pricestronghold = 85;
-    private final static int pricevillage = 40;
-    private final static int priceocean = 60;
-    private final static int pricetower = 50;
-    private final static int pricemansion = 60;
-    private final static int pricemineshaft = 80;
-
-    private final static int defaultborder = 15000;
+    private final static int defaultborder = plugin.getConfig().getInt("wild.maximum-distance");
 
     private static HashMap<String, Integer> cooldowns = new HashMap<>();
 
     public Wild(Main plugin)
     {
-        Wild.plugin = plugin;
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -151,6 +145,33 @@ public class Wild {
                 String n = e.getCurrentItem().getItemMeta().getDisplayName();
                 StructureType type = StructureType.getStructureTypes().get(n.toUpperCase());
 
+                for(String s : plugin.getConfig().getConfigurationSection("structures.options").getKeys(false))
+                {
+
+                    if(plugin.getConfig().getString("structures.options." + s + ".type").equalsIgnoreCase(n))
+                    {
+
+                        if(bal < Config.getPrice(s))
+                        {
+                            Utils.errorAsItem(e.getCurrentItem(), Utils.getLang("no-money"));
+                            return;
+                        }
+
+                        EconomyResponse r = econ.withdrawPlayer(p, Config.getPrice(s));
+
+                        if(r.transactionSuccess())
+                        {
+
+                            teleportToStructure(p, type, Config.getPrice(s));
+
+                        }
+                        else {
+                            Utils.errorAsItem(e.getCurrentItem(), "Something went wrong..");
+                        }
+
+                    }
+
+                }
 
 
 
@@ -218,8 +239,6 @@ public class Wild {
 
                 inv.setItem(i, is);
 
-
-
             x++;
 
         }
@@ -284,8 +303,6 @@ public class Wild {
 
     public static int start, stop, time;
 
-    //public static Cache<String, Location> cache = new Cache<>(600, 300, 10);
-
     public static Cooldown c;
 
     public static boolean hasMoney(Player p, int distance)
@@ -303,7 +320,7 @@ public class Wild {
             {
 
                 if (bal < pricesmall) {
-                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8(&c✖&8) &fNu ai suficienti bani!"));
+                    Utils.sendParsed(p, Utils.getLang("no-money"));
                     return false;
                 }
 
@@ -316,7 +333,7 @@ public class Wild {
             {
 
                 if (bal <pricemedium) {
-                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8(&c✖&8) &fNu ai suficienti bani!"));
+                    Utils.sendParsed(p, Utils.getLang("no-money"));
                     return false;
                 }
 
@@ -328,7 +345,7 @@ public class Wild {
             {
 
                 if (bal < pricebig) {
-                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8(&c✖&8) &fNu ai suficienti bani!"));
+                    Utils.sendParsed(p, Utils.getLang("no-money"));
                     return false;
                 }
 
@@ -343,22 +360,20 @@ public class Wild {
 
     }
 
-    //de verificat daca lumea in care e jucatoru e enabled
-    //de facut cv economie
+
     public static void teleportToStructure(Player p, StructureType type, int price)
     {
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
         {
 
-            String v = org.bukkit.ChatColor.translateAlternateColorCodes('&', "&c&lSearching..");
-            p.sendTitle(v, "", 15, 60, 15);
+            p.sendTitle(Utils.parse(Utils.getLang("searching.title")).toString(), Utils.parse(Utils.getLang("searching.subtitle")).toString(), 15, 60, 15);
 
         });
 
-        c = new Cooldown(p.getUniqueId(), "structure", 86400);
+        c = new Cooldown(p.getUniqueId(), "structure", Config.getStructuresCooldown());
 
-        if (c.has() && !p.hasPermission("engine.admin")) {
+        if (c.has() && !p.hasPermission("smartwild.admin")) {
             c.error();
             return;
         }
@@ -371,14 +386,11 @@ public class Wild {
             @Override
             public void run() {
 
-                //CompletableFuture<Location> l = CompletableFuture.supplyAsync(() -> Server.getMainWorld().locateNearestStructure(p.getLocation(), type, getBorder(Server.getMainWorld()), false));
-                //Location lok = l.join();
-
                 Location lok = w.locateNearestStructure(p.getLocation(), type, getBorder(w), false);
 
                 if(lok == null)
                 {
-                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8(&c✖&8) &fNu au fost gasite structuri in jurul tau."));
+                    Utils.sendParsed(p, Utils.getLang("no-structures"));
                     return;
                 }
 
@@ -398,17 +410,19 @@ public class Wild {
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
                     {
 
-                        p.sendMessage(" ");
-                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lWild: &fTe-ai teleportat la cel mai apropiat " + type.getName().replace("_", " ").toLowerCase() + " pentru " + price + " ✪"));
-                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lTip: &fDaca nu esti fix la locatie, este posibil ca aceasta sa se afle sub tine!"));
-                        p.sendMessage(" ");
+                        for(String s : plugin.getConfig().getStringList("messages.teleported-to-structure"))
+                        {
+                            Utils.sendParsed(p, s.replace("%structure%", type.getName().replace("_", " ").toLowerCase()).replace("%price%", Integer.toString(price)));
+                        }
 
-                        String v1 = org.bukkit.ChatColor.translateAlternateColorCodes('&', "&c&lYou've been teleported");
-                        String m2 = org.bukkit.ChatColor.translateAlternateColorCodes('&', "&cX: &f" + loc.getBlockX() + "&c Y: &f" + loc.getBlockY() + "&c Z: &f" + loc.getBlockZ());
-                        p.sendTitle(v1, m2, 30, 50, 30);
+                        p.sendTitle(Utils.parse(Utils.getLang("teleported.title")).toString(), Utils.parse(Utils.getLang("teleported.subtitle")).toString()
+                                .replace("%x%", Integer.toString(loc.getBlockX()))
+                                .replace("%y%", Integer.toString(loc.getBlockY()))
+                                .replace("%z%", Integer.toString(loc.getBlockZ())), 30, 50, 30);
+
                         Utils.sendSound(p);
 
-                        p.spawnParticle(Particle.DRAGON_BREATH, loc, 4);
+                        p.spawnParticle(Particle.valueOf(plugin.getConfig().getString("other.particle")), loc, 4);
 
                     });
 
@@ -419,7 +433,7 @@ public class Wild {
                         public void run() {
 
 
-                            if (p.isInvulnerable() && !p.hasPermission("engine.god")) {
+                            if (p.isInvulnerable()) {
                                 p.setInvulnerable(false);
                             }
 
@@ -441,6 +455,8 @@ public class Wild {
 
         if(!hasMoney(p, distance)) return;
 
+        if(!Config.getEnabledWorlds().contains(world.getName())) return;
+
         start = (int) System.currentTimeMillis();
 
         if(!cooldowns.containsKey(p.getName()))
@@ -450,7 +466,7 @@ public class Wild {
 
         c = new Cooldown(p.getUniqueId(), "wild", 30 * cooldowns.get(p.getName()));
 
-        if (c.has() && !p.hasPermission("engine.admin")) {
+        if (c.has() && !p.hasPermission("smartwild.admin")) {
             c.error();
             return;
         }
@@ -461,15 +477,11 @@ public class Wild {
             @Override
             public void run() {
 
-                String v = org.bukkit.ChatColor.translateAlternateColorCodes('&', "&c&lSearching..");
-                p.sendTitle(v, "Hold tight!", 15, 60, 15);
 
+                p.sendTitle(Utils.parse(Utils.getLang("searching.title")).toString(), Utils.parse(Utils.getLang("searching.subtitle")).toString(), 15, 60, 15);
 
                 CompletableFuture<Location> l = CompletableFuture.supplyAsync(() -> Locations.getRandomLocation(world, distance));
                 Location loc = l.join();
-
-
-                //Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lWild: &fTook &c" + (System.currentTimeMillis() - start) + "ms &fto find a location."));
 
                 Bukkit.getScheduler().runTask(plugin, () -> loc.getChunk().load());
 
@@ -477,21 +489,25 @@ public class Wild {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () ->
                 {
 
-                    PotionEffect nv = PotionEffectType.BLINDNESS.createEffect(40, 2);
-                    p.addPotionEffect(nv, true);
+                    if(plugin.getConfig().getBoolean("other.blindness")) {
+                        PotionEffect nv = PotionEffectType.BLINDNESS.createEffect(40, 2);
+                        p.addPotionEffect(nv, true);
+                    }
 
                     p.setInvulnerable(true);
                     p.teleport(loc);
+                    p.spawnParticle(Particle.valueOf(plugin.getConfig().getString("other.particle")), loc, 4);
 
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
                     {
 
-                        String v1 = org.bukkit.ChatColor.translateAlternateColorCodes('&', "&c&lYou've been teleported");
-                        String m2 = org.bukkit.ChatColor.translateAlternateColorCodes('&', "&cX: &f" + loc.getBlockX() + "&c Y: &f" + loc.getBlockY() + "&c Z: &f" + loc.getBlockZ());
-                        p.sendTitle(v1, m2, 30, 50, 30);
-                        Utils.sendSound(p);
+                        p.sendTitle(Utils.parse(Utils.getLang("teleported.title")).toString(), Utils.parse(Utils.getLang("teleported.subtitle")).toString()
+                                .replace("%x%", Integer.toString(loc.getBlockX()))
+                                .replace("%y%", Integer.toString(loc.getBlockY()))
+                                .replace("%z%", Integer.toString(loc.getBlockZ())), 30, 50, 30);
 
-                        //p.spawnParticle(Particle.DRAGON_BREATH, loc, 4);
+
+                        Utils.sendSound(p);
 
                     });
 
@@ -502,7 +518,7 @@ public class Wild {
                         public void run() {
 
 
-                            if (p.isInvulnerable() && !p.hasPermission("engine.god")) {
+                            if (p.isInvulnerable()) {
                                 p.setInvulnerable(false);
                             }
 
@@ -526,11 +542,6 @@ public class Wild {
         }, 60 * 20 * 15);
 
     }
-
-    ArrayList<String> cooldown = new ArrayList<>();
-
-
-
 
 
 }

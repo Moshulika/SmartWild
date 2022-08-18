@@ -2,6 +2,7 @@ wild:
   menu-title: "Random Teleport"
   menu-glass: BLACK_STAINED_GLASS_PANE
   minimum-distance: 1000
+  maximum-distance: 15000
   avoid-regions: true
   cooldown: 10
   beginner-time: 6
@@ -34,6 +35,7 @@ wild:
     - "world"
 
 structures:
+  cooldown: 86400
   menu-title: "Teleport to structures"
   menu-item: SPAWNER
   menu-item-name: "Teleport to structures"
@@ -52,3 +54,26 @@ structures:
 
 messages:
   no-money: "You don't have enough money"
+  disabled-world: "This command doesn't work in this world"
+  cooldown: "You need to wait %time% minutes"
+  no-structures: "No structures were found near you"
+  not-player: "You need to be a player in order to use this command"
+  teleported-to-structure:
+    - " "
+    - "You were teleported to the nearest %structure% for $%price%"
+    - "Tip: If the structure isn't near you, it may be under you or above you"
+    - " "
+  searching:
+    title: "Searching.."
+    subtitle: "Hold tight!"
+  teleported:
+    title: "You've been teleported"
+    subtitle: "X: %x%, Y: %y%, Z: %z%"
+  no-access:
+    title: "Oops!"
+    subtitle: "You don't have access to this command"
+
+other:
+  sound: BLOCK_NOTE_BLOCK_PLING
+  particle: DRAGON_BREATH
+  blindness: true

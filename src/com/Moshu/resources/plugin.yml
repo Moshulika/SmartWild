@@ -14,8 +14,16 @@ softdepend: [Vault, PlaceholderAPI, WorldGuard, ChunkyBorder]
 api-version: "1.19"
 
 commands:
-  a:
+  wild:
+    permission: smartwild.use
+    aliases:
+      - rtp
 
 
 permissions:
-  b:
+  smartwild.use:
+    default: op
+    description: Use the main command
+  smartwild.admin:
+    default: op
+    description: Bypass the restrictions such as cooldowns

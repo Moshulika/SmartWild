@@ -21,7 +21,7 @@ public class Commands implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if(!p.hasPermission("engine.wild"))
+        if(!p.hasPermission("smartwild.use"))
         {
             Utils.sendNoAccess(p);
             return true;
@@ -29,15 +29,15 @@ public class Commands implements CommandExecutor {
 
         World world = p.getWorld();
 
-        if(!world.getName().equals("world") && !world.getName().equals("smp"))
+        if(!Config.getEnabledWorlds().contains(world.getName()))
         {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8(&c✖&8) &fTrebuie sa fii in lumea normala!"));
+            Utils.sendParsed(p, Utils.getLang("disabled-world"));
             return true;
         }
 
-        if(Cooldown.hasCooldown(p.getUniqueId(), "wild") && !p.hasPermission("engine.admin"))
+        if(Cooldown.hasCooldown(p.getUniqueId(), "wild") && !p.hasPermission("smartwild.admin"))
         {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8(&c✖&8) &fMai ai de asteptat " + Cooldown.getRemainingTimeMinutes(p.getUniqueId(), "wild") + " minut(e)."));
+            Utils.sendParsed(p, Utils.getLang("cooldown").replace("%time%", Integer.toString(Cooldown.getRemainingTimeMinutes(p.getUniqueId(), "wild"))));
             return true;
         }
 

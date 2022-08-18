@@ -16,15 +16,7 @@ import java.io.IOException;
 
 public class Main extends JavaPlugin {
 
-
-    File cooldownsf;
-    FileConfiguration cooldowns;
-
-    public FileConfiguration getCooldownsFile()
-    {
-        return cooldowns;
-    }
-
+    private Wild wild = new Wild(this);
 
     public void onEnable()
     {
@@ -43,8 +35,10 @@ public class Main extends JavaPlugin {
         s.sendMessage(ChatColor.translateAlternateColorCodes('&', " "));
 
         createFiles();
-
         setupEconomy();
+
+        getCommand("wild").setExecutor(new Commands());
+        Bukkit.getPluginManager().registerEvents(wild, this);
 
         RegisteredServiceProvider rsp = this.getServer().getServicesManager().getRegistration(Economy.class);
         econ = (Economy) rsp.getProvider();
@@ -64,6 +58,15 @@ public class Main extends JavaPlugin {
     {
 
     }
+
+    File cooldownsf;
+    FileConfiguration cooldowns;
+
+    public FileConfiguration getCooldownsFile()
+    {
+        return cooldowns;
+    }
+
 
     public void createFiles()
     {
