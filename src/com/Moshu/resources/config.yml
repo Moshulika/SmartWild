@@ -1,0 +1,54 @@
+wild:
+  menu-title: "Random Teleport"
+  menu-glass: BLACK_STAINED_GLASS_PANE
+  minimum-distance: 1000
+  avoid-regions: true
+  cooldown: 10
+  beginner-time: 6
+  distances:
+    short:
+      name: "Coal"
+      price: 100
+      distance: 1000
+      icon: COAL
+      lore:
+        - "Teleport distance: 100 blocks"
+        - "Price: 100"
+    medium:
+      name: "Iron"
+      price: 100
+      distance: 1000
+      icon: IRON_INGOT
+      lore:
+        - "Teleport distance: 100 blocks"
+        - "Price: 100"
+    long:
+      name: "Diamond"
+      price: 100
+      distance: 1000
+      icon: DIAMOND
+      lore:
+        - "Teleport distance: 100 blocks"
+        - "Price: 100"
+  enabled-worlds:
+    - "world"
+
+structures:
+  menu-title: "Teleport to structures"
+  menu-item: SPAWNER
+  menu-item-name: "Teleport to structures"
+  menu-item-lore:
+    - "Lore 1"
+    - "Lore 2"
+  options:
+    1:
+      type: MINESHAFT
+      price: 100
+      icon: MINECART
+      lore:
+        - "Teleport distance: 100 blocks"
+        - "Price: 100"
+
+
+messages:
+  no-money: "You don't have enough money"

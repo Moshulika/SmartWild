@@ -1,0 +1,14 @@
+##########################################
+#                                        #
+#                HEADER                  #
+#                                        #
+##########################################
+
+main: com.Moshu.SmartWild.Main
+name: SmartWild
+version: 2022-08-18T12:03:03+03:00
+description: A better wild plugin
+author: Moshu
+website: mc.b-zone.ro
+softdepend: [Vault, PlaceholderAPI, WorldGuard, ChunkyBorder]
+api-version: "1.19"
