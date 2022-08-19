@@ -41,6 +41,12 @@ public class Commands implements CommandExecutor {
             return true;
         }
 
+        if(world.getEnvironment() != World.Environment.NORMAL)
+        {
+            p.sendMessage(Utils.format("&8(&b✈&8) &fCurrently only overworld is supported for random-teleporting! Nether and End are coming soon!"));
+            return true;
+        }
+
         if(Config.simpleMode()) {
 
             Wild.randomTeleport(p, p.getWorld(), Config.simpleModeMaxDistance());

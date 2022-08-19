@@ -36,12 +36,12 @@ public class Config {
 
     public static boolean simpleMode()
     {
-        return plugin.getConfig().getBoolean("wild.simple-mode", false);
+        return plugin.getConfig().getBoolean("other.simple-mode", false);
     }
 
     public static int simpleModeMaxDistance()
     {
-        return plugin.getConfig().getInt("wild.simple-mode-max-distance", 5000);
+        return plugin.getConfig().getInt("other.simple-mode-max-distance", 5000);
     }
 
     public static Material getGlassPane()
@@ -56,7 +56,7 @@ public class Config {
 
     public static boolean biomesEnabled()
     {
-        return plugin.getConfig().getBoolean("other.enable-biomes");
+        return plugin.getConfig().getBoolean("other.enable-biomes") && Utils.isPaper();
     }
 
 }

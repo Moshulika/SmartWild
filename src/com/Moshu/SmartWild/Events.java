@@ -22,7 +22,7 @@ public class Events implements Listener {
     public void onClick(InventoryClickEvent e)
     {
 
-        if(e.getView().getTitle().equals(plugin.getConfig().getString("structures.menu-title", "Random Teleport")))
+        if(e.getView().getTitle().equals(plugin.getConfig().getString("wild.menu-title", "Random Teleport")))
         {
 
             if(e.getCurrentItem() == null) return;

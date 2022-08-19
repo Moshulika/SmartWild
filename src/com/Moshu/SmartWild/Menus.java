@@ -20,11 +20,11 @@ public class Menus {
 
         if(Config.structuresEnabled() || Config.biomesEnabled()) {
 
-            inv = Bukkit.createInventory(null, 45, plugin.getConfig().getString("structures.menu-title", "Random Teleport"));
+            inv = Bukkit.createInventory(null, 45, plugin.getConfig().getString("wild.menu-title", "Random Teleport"));
 
         }
         else {
-            inv = Bukkit.createInventory(null, 27, plugin.getConfig().getString("structures.menu-title", "Random Teleport"));
+            inv = Bukkit.createInventory(null, 27, plugin.getConfig().getString("wild.menu-title", "Random Teleport"));
         }
 
         int i = 9;

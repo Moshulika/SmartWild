@@ -264,7 +264,7 @@ public class Utils
             Bukkit.getConsoleSender().sendMessage(mm.deserialize(s));
         }
         else {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', s));
+            Bukkit.getConsoleSender().sendMessage(Utils.format(s));
         }
 
     }
@@ -277,7 +277,7 @@ public class Utils
             return mm.serialize(mm.deserialize(s));
         }
         else {
-            return ChatColor.translateAlternateColorCodes('&', s);
+            return Utils.format(s);
         }
     }
 
@@ -290,7 +290,7 @@ public class Utils
             p.sendMessage(mm.deserialize(s));
         }
         else {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
+            p.sendMessage(Utils.format(s));
         }
 
     }

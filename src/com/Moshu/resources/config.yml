@@ -1,18 +1,31 @@
+
+#Settings involving only the Random Teleporting aspect ##########
+
 wild:
-  simple-mode: false #You can choose from simple or menu - simple is just the /wild command that teleports you, and the menu is the whole plugin shabang
-  simple-mode-max-distance: 10000
+
+  #The title of the main menu
   menu-title: "Random Teleport"
+
+  #The color of the glass in the main menu
   menu-glass: BLACK_STAINED_GLASS_PANE
+
+  #The maxim distance to teleport the player to (only working if you don't have ChunkyBorder installed), works like a border for all teleports
   maximum-distance: 15000
+
+  #Cooldown in seconds between random teleports (if the player teleports too many times, the waiting time will increase automaticaly to reduce spam)
   cooldown: 10
+
+  #The time in hours in which new players have free random teleporting (set to 0 or -1 to disable)
   beginner-time: 6
+
+  #The 3 distances the players can select. You can not add more distances, edit the available ones.
   distances:
     short:
-      name: "Coal"
-      price: 100
-      distance: 1000
-      icon: COAL
-      lore:
+      name: "Coal"    #The name shown in the menu
+      price: 100      #The price (needs Vault to work)
+      distance: 1000  #The max distance to teleport the players
+      icon: COAL      #The menu icon
+      lore:           #The lore of the menu item
         - "Teleport distance: 100 blocks"
         - "Price: 100"
     medium:
@@ -31,23 +44,27 @@ wild:
       lore:
         - "Teleport distance: 100 blocks"
         - "Price: 100"
+
+  #The worlds in which the players can teleport randomly
   enabled-worlds:
     - "world"
 
+##################################################################
+
 structures:
-  cooldown: 86400
-  menu-title: "Teleport to structures"
-  menu-item: SPAWNER
-  menu-item-name: "Teleport to structures"
-  menu-item-lore:
+  cooldown: 86400 #Cooldown between structures teleports
+  menu-title: "Teleport to structures" #The menu item
+  menu-item: SPAWNER #The icon in the main menu
+  menu-item-name: "Teleport to structures" #The main menu item's name
+  menu-item-lore: #The main menu item's lore
     - "Lore 1"
     - "Lore 2"
   options:
     1:
-      type: MINESHAFT
-      price: 100
-      icon: MINECART
-      lore:
+      type: MINESHAFT #Must be valid structure name, this will also be the name shown in the menu, but formatted
+      price: 100 #The price to teleport
+      icon: MINECART #The icon in the menu
+      lore: #The lore of the item in the menu
         - "Teleport distance: 100 blocks"
         - "Price: 100"
     2:
@@ -96,6 +113,10 @@ biomes:
         - "Teleport distance: 100 blocks"
         - "Price: 100"
 
+#Attention! Depending on your platform, you need to use different formatting codes!
+#For Paper users - use the new MiniMessage format, it is awesome: https://webui.adventure.kyori.net/
+#For Spigot or other platforms - use the old color codes (&c, &f), or use HEX like this: #80C7FDHello!
+
 messages:
   no-money: "<dark_gray>(</dark_gray><red>❌</red><dark_gray>)</dark_gray> <white>You don't have enough money"
   disabled-world: "<dark_gray>(</dark_gray><red>❌</red><dark_gray>)</dark_gray> <white>This command doesn't work in this world"
@@ -123,9 +144,12 @@ messages:
     title: "Oops!"
     subtitle: "You don't have access to this command"
 
+#Some misc settings
 other:
   sound: BLOCK_NOTE_BLOCK_PLING
   particle: DRAGON_BREATH
-  blindness: true
+  blindness: true #Give blindness to players for a short amount of time on teleporting?
   enable-structures: true
-  enable-biomes: true
+  enable-biomes: true #Only works on Paper servers
+  simple-mode: false #Simple mode is basically, just the /wild command that teleports everyone
+  simple-mode-max-distance: 10000 #The max range of the /wild command

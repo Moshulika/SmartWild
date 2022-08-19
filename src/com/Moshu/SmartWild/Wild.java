@@ -29,6 +29,12 @@ public class Wild {
 
         if(!Config.getEnabledWorlds().contains(world.getName())) return;
 
+        if(world.getEnvironment() != World.Environment.NORMAL)
+        {
+            p.sendMessage(Utils.format("&8(&b✈&8) &fCurrently only overworld is supported for random-teleporting! Nether and End are coming soon!"));
+            return;
+        }
+
         start = (int) System.currentTimeMillis();
 
         if(!cooldowns.containsKey(p.getName()))
