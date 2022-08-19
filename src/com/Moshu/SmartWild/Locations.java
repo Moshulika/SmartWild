@@ -25,6 +25,8 @@ import java.util.Map;
 public class Locations {
 
     private static final ArrayList<Biome> blacklist = new ArrayList<>();
+    private static Plugin plugin = Bukkit.getPluginManager().getPlugin("SmartWild");
+
 
     static
     {
@@ -203,7 +205,8 @@ public class Locations {
         return  isInBorder(loc) &&
                 !blacklistedBiome(loc) &&
                 !isLeaves(loc) &&
-                !isLiquidUnder(loc);
+                !isLiquidUnder(loc) &&
+                !isInRegion(loc);
 
 
     }
@@ -232,6 +235,37 @@ public class Locations {
         }
 
         return loc;
+
+    }
+
+    public static int getBorder(org.bukkit.World w) {
+
+        int defaultborder = plugin.getConfig().getInt("wild.maximum-distance", 10000);
+
+        if (!Utils.isEnabled("ChunkyBorder")) {
+            return defaultborder;
+        }
+
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("ChunkyBorder");
+        File f = new File(plugin.getDataFolder(), "borders.json");
+
+        try
+        {
+
+            Map<String, BorderData> loadedBorders = new Gson().fromJson(new FileReader(f), new TypeToken<Map<String, BorderData>>() {
+            }.getType());
+
+            if (loadedBorders == null) return defaultborder;
+            if (loadedBorders.size() == 0) return defaultborder;
+            if (!loadedBorders.containsKey(w.getName())) return defaultborder;
+
+            return (int) loadedBorders.get(w.getName()).getRadiusX() - 1000;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return defaultborder;
 
     }
 

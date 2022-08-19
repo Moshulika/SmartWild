@@ -7,16 +7,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
-public class Main extends JavaPlugin {
+public class Main extends JavaPlugin implements Listener {
 
-    private Wild wild = new Wild(this);
+    Wild wild = new Wild(this);
+    Cooldown cooldown = new Cooldown(this);
+    Utils utils = new Utils(this);
 
     public void onEnable()
     {
@@ -26,7 +30,7 @@ public class Main extends JavaPlugin {
         PluginDescriptionFile pdfFile = getDescription();
 
         s.sendMessage(ChatColor.translateAlternateColorCodes('&', " "));
-        s.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lEngine &f---------------------"));
+        s.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lSmartWild &f---------------------"));
         s.sendMessage(ChatColor.translateAlternateColorCodes('&', " "));
         s.sendMessage(ChatColor.translateAlternateColorCodes('&', "&fAuthor: &cMoshu"));
         s.sendMessage(ChatColor.translateAlternateColorCodes('&', "&fVersion: &c" + pdfFile.getVersion()));
@@ -38,10 +42,21 @@ public class Main extends JavaPlugin {
         setupEconomy();
 
         getCommand("wild").setExecutor(new Commands());
-        Bukkit.getPluginManager().registerEvents(wild, this);
+        Bukkit.getPluginManager().registerEvents(new Events(), this);
 
         RegisteredServiceProvider rsp = this.getServer().getServicesManager().getRegistration(Economy.class);
-        econ = (Economy) rsp.getProvider();
+
+        if(rsp != null) {
+            econ = (Economy) rsp.getProvider();
+        }
+        else
+        {
+            getLogger().log(Level.SEVERE, "You don't have an economy handler installed, plugin is shutting down, unless it is in simple mode");
+
+            if(!Config.simpleMode()) {
+                Bukkit.getPluginManager().disablePlugin(this);
+            }
+        }
 
         long stop = (int) System.currentTimeMillis();
 
@@ -59,8 +74,8 @@ public class Main extends JavaPlugin {
 
     }
 
-    File cooldownsf;
-    FileConfiguration cooldowns;
+    File cooldownsf, configf;
+    FileConfiguration cooldowns, config;
 
     public FileConfiguration getCooldownsFile()
     {
@@ -71,7 +86,8 @@ public class Main extends JavaPlugin {
     public void createFiles()
     {
 
-        cooldownsf = new File(getDataFolder() + "cooldowns.yml");
+        cooldownsf = new File(getDataFolder(),"cooldowns.yml");
+        configf = new File(getDataFolder(),"config.yml");
 
         if(!cooldownsf.exists())
         {
@@ -80,33 +96,26 @@ public class Main extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&l* &cCooldowns.yml &fnot found, creating."));
         }
 
+        if(!configf.exists())
+        {
+            configf.getParentFile().mkdirs();
+            saveResource("config.yml", false);
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&l* &cConfig.yml &fnot found, creating."));
+        }
+
         cooldowns = new YamlConfiguration();
+        config = new YamlConfiguration();
 
         try
         {
             cooldowns.load(cooldownsf);
+            config.load(configf);
         }
         catch (IOException | InvalidConfigurationException e)
         {
             e.printStackTrace();
         }
 
-    }
-
-    public boolean hasDependencies()
-    {
-
-        if(!setupEconomy())
-        {
-            return false;
-        }
-
-        else if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null)
-        {
-            return false;
-        }
-
-        return true;
     }
 
     Economy econ;
@@ -124,7 +133,7 @@ public class Main extends JavaPlugin {
             return false;
         }
 
-        econ = (Economy)rsp.getProvider();
+        econ = (Economy) rsp.getProvider();
 
         if (econ != null)
         {

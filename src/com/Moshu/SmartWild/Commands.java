@@ -41,7 +41,21 @@ public class Commands implements CommandExecutor {
             return true;
         }
 
-        Wild.openMenu(p);
+        if(Config.simpleMode()) {
+
+            Wild.randomTeleport(p, p.getWorld(), Config.simpleModeMaxDistance());
+
+        }
+        else {
+
+            if(!Utils.isEnabled("Vault"))
+            {
+                Utils.sendConsoleParsed("You don't have Vault installed! Prices will not work, so the plugin is blocked to prevent abuse.");
+                return true;
+            }
+
+            Menus.openMenu(p);
+        }
 
         return true;
     }

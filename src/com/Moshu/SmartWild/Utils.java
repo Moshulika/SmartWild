@@ -3,6 +3,8 @@ package com.Moshu.SmartWild;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.ShulkerBox;
@@ -16,6 +18,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
@@ -78,6 +81,61 @@ public class Utils
         return "&8(&c❌&8) &f";
     }
 
+    public static boolean hasMoney(Player p, int distance)
+    {
+
+        RegisteredServiceProvider rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+        Economy econ = (Economy) rsp.getProvider();
+
+        if(!Utils.isBeginner(p))
+        {
+
+            double bal = econ.getBalance(p);
+
+            if(distance == plugin.getConfig().getInt("wild.distances.short.distance", 5000))
+            {
+
+                if (bal < plugin.getConfig().getInt("wild.distances.short.price", 5000)) {
+                    Utils.sendParsed(p, Utils.getLang("no-money"));
+                    return false;
+                }
+
+                EconomyResponse r = econ.withdrawPlayer(p, plugin.getConfig().getInt("wild.distances.short.price", 5000));
+
+                return r.transactionSuccess();
+
+            }
+            else if(distance == plugin.getConfig().getInt("wild.distances.medium.distance", 5000))
+            {
+
+                if (bal < plugin.getConfig().getInt("wild.distances.medium.price", 5000)) {
+                    Utils.sendParsed(p, Utils.getLang("no-money"));
+                    return false;
+                }
+
+                EconomyResponse r = econ.withdrawPlayer(p, plugin.getConfig().getInt("wild.distances.medium.price", 5000));
+
+                return r.transactionSuccess();
+            }
+            else if(distance == plugin.getConfig().getInt("wild.distances.long.distance", 5000))
+            {
+
+                if (bal < plugin.getConfig().getInt("wild.distances.long.price", 5000)) {
+                    Utils.sendParsed(p, Utils.getLang("no-money"));
+                    return false;
+                }
+
+                EconomyResponse r = econ.withdrawPlayer(p, plugin.getConfig().getInt("wild.distances.long.price", 5000));
+
+                return r.transactionSuccess();
+            }
+
+        }
+
+        return true;
+
+    }
+
     /**
      * Fill an inventory with colored glass
      * @param inv the inventory to be filled
@@ -85,7 +143,7 @@ public class Utils
     public static void fillWithGlass(Inventory inv)
     {
 
-        ItemStack sticla = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("wild.menu-glass")));
+        ItemStack sticla = new ItemStack(Config.getGlassPane());
 
         ItemMeta sticlam = sticla.getItemMeta();
         sticlam.setDisplayName(" ");
@@ -191,31 +249,49 @@ public class Utils
      * @param plugin the plugin to check
      * @return true/false
      */
-    public static boolean isEnabled(String plugin)
-    {
+    public static boolean isEnabled(String plugin) {
 
         return Bukkit.getPluginManager().getPlugin(plugin) != null && Bukkit.getPluginManager().getPlugin(plugin).isEnabled();
 
     }
 
-    private static MiniMessage mm = MiniMessage.miniMessage();
-
     public static void sendConsoleParsed(String s)
     {
 
-        Bukkit.getConsoleSender().sendMessage(mm.deserialize(s));
+        if(isPaper())
+        {
+            MiniMessage mm = MiniMessage.miniMessage();
+            Bukkit.getConsoleSender().sendMessage(mm.deserialize(s));
+        }
+        else {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', s));
+        }
 
     }
 
-    public static Component parse(String s)
+    public static String parse(String s)
     {
-        return mm.deserialize(s);
+        if(isPaper())
+        {
+            MiniMessage mm = MiniMessage.miniMessage();
+            return mm.serialize(mm.deserialize(s));
+        }
+        else {
+            return ChatColor.translateAlternateColorCodes('&', s);
+        }
     }
 
     public static void sendParsed(Player p, String s)
     {
 
-        p.sendMessage(mm.deserialize(s));
+        if(isPaper())
+        {
+            MiniMessage mm = MiniMessage.miniMessage();
+            p.sendMessage(mm.deserialize(s));
+        }
+        else {
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
+        }
 
     }
 

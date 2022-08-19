@@ -1,9 +1,9 @@
 wild:
+  simple-mode: false #You can choose from simple or menu - simple is just the /wild command that teleports you, and the menu is the whole plugin shabang
+  simple-mode-max-distance: 10000
   menu-title: "Random Teleport"
   menu-glass: BLACK_STAINED_GLASS_PANE
-  minimum-distance: 1000
   maximum-distance: 15000
-  avoid-regions: true
   cooldown: 10
   beginner-time: 6
   distances:
@@ -50,14 +50,64 @@ structures:
       lore:
         - "Teleport distance: 100 blocks"
         - "Price: 100"
+    2:
+      type: STRONGHOLD
+      price: 100
+      icon: ENDER_EYE
+      lore:
+        - "Teleport distance: 100 blocks"
+        - "Price: 100"
+    3:
+      type: VILLAGE
+      price: 100
+      icon: CHEST
+      lore:
+        - "Teleport distance: 100 blocks"
+        - "Price: 100"
 
+biomes:
+  cooldown: 86400
+  menu-title: "Teleport to biomes"
+  menu-item: OAK_SAPLING
+  menu-item-name: "Teleport to biomes"
+  menu-item-lore:
+    - "Lore 1"
+    - "Lore 2"
+  options:
+    1:
+      type: BAMBOO_JUNGLE
+      price: 100
+      icon: BAMBOO
+      lore:
+        - "Teleport distance: 100 blocks"
+        - "Price: 100"
+    2:
+      type: DESERT
+      price: 100
+      icon: SAND
+      lore:
+        - "Teleport distance: 100 blocks"
+        - "Price: 100"
+    3:
+      type: FOREST
+      price: 100
+      icon: SPRUCE_SAPLING
+      lore:
+        - "Teleport distance: 100 blocks"
+        - "Price: 100"
 
 messages:
-  no-money: "You don't have enough money"
-  disabled-world: "This command doesn't work in this world"
-  cooldown: "You need to wait %time% minutes"
-  no-structures: "No structures were found near you"
-  not-player: "You need to be a player in order to use this command"
+  no-money: "<dark_gray>(</dark_gray><red>❌</red><dark_gray>)</dark_gray> <white>You don't have enough money"
+  disabled-world: "<dark_gray>(</dark_gray><red>❌</red><dark_gray>)</dark_gray> <white>This command doesn't work in this world"
+  cooldown: "<dark_gray>(</dark_gray><red>❌</red><dark_gray>)</dark_gray> <white>You need to wait %time% minutes"
+  no-structures: "<dark_gray>(</dark_gray><red>❌</red><dark_gray>)</dark_gray> <white>No structures were found near you"
+  no-biomes: "<dark_gray>(</dark_gray><red>❌</red><dark_gray>)</dark_gray> <white>No biomes were found near you"
+  not-player: "<dark_gray>(</dark_gray><red>❌</red><dark_gray>)</dark_gray> <white>You need to be a player in order to use this command"
+  teleported-to-biome:
+    - " "
+    - "You were teleported to the nearest %biome% for $%price%"
+    - "Tip: If the biome isn't near you, it may be under you or above you"
+    - " "
   teleported-to-structure:
     - " "
     - "You were teleported to the nearest %structure% for $%price%"
@@ -77,3 +127,5 @@ other:
   sound: BLOCK_NOTE_BLOCK_PLING
   particle: DRAGON_BREATH
   blindness: true
+  enable-structures: true
+  enable-biomes: true

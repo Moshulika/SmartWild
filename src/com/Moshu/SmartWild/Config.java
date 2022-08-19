@@ -1,6 +1,7 @@
 package com.Moshu.SmartWild;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -11,12 +12,12 @@ public class Config {
 
     public static int getPrice(String s)
     {
-        return plugin.getConfig().getInt("structures.options." + s + ".price");
+        return plugin.getConfig().getInt("structures.options." + s + ".price", 0);
     }
 
     public static int getStructuresCooldown()
     {
-        return plugin.getConfig().getInt("structures.cooldown");
+        return plugin.getConfig().getInt("structures.cooldown", 1);
     }
 
     public static ArrayList<String> getEnabledWorlds()
@@ -31,6 +32,31 @@ public class Config {
 
         return w;
 
+    }
+
+    public static boolean simpleMode()
+    {
+        return plugin.getConfig().getBoolean("wild.simple-mode", false);
+    }
+
+    public static int simpleModeMaxDistance()
+    {
+        return plugin.getConfig().getInt("wild.simple-mode-max-distance", 5000);
+    }
+
+    public static Material getGlassPane()
+    {
+        return Material.matchMaterial(plugin.getConfig().getString("wild.menu-glass", "BLACK_STAINED_GLASS_PANE"));
+    }
+
+    public static boolean structuresEnabled()
+    {
+        return plugin.getConfig().getBoolean("other.enable-structures");
+    }
+
+    public static boolean biomesEnabled()
+    {
+        return plugin.getConfig().getBoolean("other.enable-biomes");
     }
 
 }
