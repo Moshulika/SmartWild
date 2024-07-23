@@ -1,0 +1,25 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SmartWild">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="SmartWild.jar">
+      <element id="module-output" name="SmartWild" />
+      <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.17.1" />
+      <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.8.0-beta4" />
+      <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.17.1" />
+      <element id="library" level="project" name="Maven: commons-io:commons-io:2.11.0" />
+      <element id="library" level="project" name="Maven: org.apache.commons:commons-collections4:4.4" />
+      <element id="library" level="project" name="Maven: org.apache.commons:commons-jcs-core:2.2.1" />
+      <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.2" />
+      <element id="library" level="project" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" />
+      <element id="library" level="project" name="Maven: junit:junit:4.10" />
+      <element id="library" level="project" name="Maven: org.hamcrest:hamcrest-core:1.1" />
+      <element id="library" level="project" name="Maven: org.apache.maven.plugins:maven-resources-plugin:3.3.0" />
+      <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-interpolation:1.26" />
+      <element id="library" level="project" name="Maven: org.apache.maven.shared:maven-filtering:3.3.0" />
+      <element id="library" level="project" name="Maven: javax.inject:javax.inject:1" />
+      <element id="library" level="project" name="Maven: org.sonatype.plexus:plexus-build-api:0.0.7" />
+      <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-utils:3.4.2" />
+      <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.12.0" />
+    </root>
+  </artifact>
+</component>

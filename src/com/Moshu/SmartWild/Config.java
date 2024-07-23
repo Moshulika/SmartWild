@@ -14,10 +14,19 @@ public class Config {
     {
         return plugin.getConfig().getInt("structures.options." + s + ".price", 0);
     }
+    public static int getBiomePrice(String s)
+    {
+        return plugin.getConfig().getInt("biomes.options." + s + ".price", 0);
+    }
+
 
     public static int getStructuresCooldown()
     {
         return plugin.getConfig().getInt("structures.cooldown", 1);
+    }
+    public static int getBiomesCooldown()
+    {
+        return plugin.getConfig().getInt("biomes.cooldown", 1);
     }
 
     public static ArrayList<String> getEnabledWorlds()

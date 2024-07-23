@@ -10,6 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+
 public class Menus {
     private static Plugin plugin = Bukkit.getPluginManager().getPlugin("SmartWild");
 
@@ -20,11 +22,11 @@ public class Menus {
 
         if(Config.structuresEnabled() || Config.biomesEnabled()) {
 
-            inv = Bukkit.createInventory(null, 45, plugin.getConfig().getString("wild.menu-title", "Random Teleport"));
+            inv = Bukkit.createInventory(null, 45, Utils.parse(plugin.getConfig().getString("wild.menu-title", "Random Teleport")));
 
         }
         else {
-            inv = Bukkit.createInventory(null, 27, plugin.getConfig().getString("wild.menu-title", "Random Teleport"));
+            inv = Bukkit.createInventory(null, 27, Utils.parse(plugin.getConfig().getString("wild.menu-title", "Random Teleport")));
         }
 
         int i = 9;
@@ -40,8 +42,16 @@ public class Menus {
 
             is = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("wild.distances." + s + ".icon", "STONE")));
             m = is.getItemMeta();
-            m.setDisplayName(plugin.getConfig().getString("wild.distances." + s + ".name"));
-            m.setLore(plugin.getConfig().getStringList("wild.distances." + s + ".lore"));
+            m.setDisplayName(Utils.parse(plugin.getConfig().getString("wild.distances." + s + ".name")));
+
+            ArrayList<String> lore = new ArrayList<>();
+
+            for(String str : plugin.getConfig().getStringList("wild.distances." + s + ".lore"))
+            {
+                lore.add(Utils.parse(str));
+            }
+
+            m.setLore(lore);
             is.setItemMeta(m);
 
             i += 2;
@@ -55,9 +65,10 @@ public class Menus {
         ItemStack str = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("structures.menu-item", "STONE")));
         ItemMeta strm = str.getItemMeta();
         strm.setDisplayName(Utils.parse(plugin.getConfig().getString("structures.menu-item-name")));
-        str.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+        str.addUnsafeEnchantment(Enchantment.SHARPNESS, 1);
         strm.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         strm.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        strm.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         strm.setLore(plugin.getConfig().getStringList("structures.menu-item-lore"));
         str.setItemMeta(strm);
 
@@ -72,8 +83,9 @@ public class Menus {
         ItemStack str2 = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("biomes.menu-item", "STONE")));
         ItemMeta strm2 = str2.getItemMeta();
         strm2.setDisplayName(Utils.parse(plugin.getConfig().getString("biomes.menu-item-name")));
-        str2.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+        str2.addUnsafeEnchantment(Enchantment.SHARPNESS, 1);
         strm2.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        strm2.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         strm2.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         strm2.setLore(plugin.getConfig().getStringList("biomes.menu-item-lore"));
         str2.setItemMeta(strm2);
@@ -95,7 +107,7 @@ public class Menus {
     public static void openStructuresMenu(Player p)
     {
 
-        Inventory inv = Bukkit.createInventory(null, 45, plugin.getConfig().getString("structures.menu-title", "Teleport to structures"));
+        Inventory inv = Bukkit.createInventory(null, 45, Utils.parse(plugin.getConfig().getString("structures.menu-title", "Teleport to structures")));
 
         ItemStack is;
         ItemMeta m;
@@ -114,8 +126,17 @@ public class Menus {
 
                 is = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("structures.options." + s + ".icon", "STONE")));
                 m = is.getItemMeta();
-                m.setDisplayName(Utils.setCapitals(plugin.getConfig().getString("structures.options." + s + ".type", "STONE").toLowerCase().replace("_", " ")));
-                m.setLore(plugin.getConfig().getStringList("structures.options." + s + ".lore"));
+                m.setDisplayName(Utils.parse(Utils.setCapitals(plugin.getConfig().getString("structures.options." + s + ".type", "STONE").toLowerCase().replace("_", " "))));
+
+                ArrayList<String> lore = new ArrayList<>();
+
+                for(String str : plugin.getConfig().getStringList("structures.options." + s + ".lore"))
+                {
+                    lore.add(Utils.parse(str));
+                }
+
+                m.setLore(lore);
+
                 is.setItemMeta(m);
 
                 inv.setItem(i + x, is);
@@ -156,8 +177,16 @@ public class Menus {
 
                 is = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("biomes.options." + s + ".icon", "STONE")));
                 m = is.getItemMeta();
-                m.setDisplayName(Utils.setCapitals(plugin.getConfig().getString("biomes.options." + s + ".type", "STONE").toLowerCase().replace("_", " ")));
-                m.setLore(plugin.getConfig().getStringList("biomes.options." + s + ".lore"));
+                m.setDisplayName(Utils.parse(Utils.setCapitals(plugin.getConfig().getString("biomes.options." + s + ".type", "STONE").toLowerCase().replace("_", " "))));
+
+                ArrayList<String> lore = new ArrayList<>();
+
+                for(String str : plugin.getConfig().getStringList("biomes.options." + s + ".lore"))
+                {
+                    lore.add(Utils.parse(str));
+                }
+
+                m.setLore(lore);
                 is.setItemMeta(m);
 
                 inv.setItem(i + x, is);

@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import java.util.Locale;
 import java.util.logging.Level;
 
 public class Events implements Listener {
@@ -37,45 +38,19 @@ public class Events implements Listener {
             if(e.getSlot() == 11)
             {
 
-                if(!Utils.isBeginner(p)) {
-
-                    if (econ.getBalance(p) < plugin.getConfig().getInt("wild.distances.short.distance", 5000)) {
-                        Utils.errorAsItem(e.getCurrentItem(), Utils.getLang("no-money"));
-                        return;
-                    }
-
-                }
-
-                Wild.randomTeleport(p, p.getWorld(), plugin.getConfig().getInt("wild.distances.short.price", 10));
+                Wild.randomTeleport(p, p.getWorld(), plugin.getConfig().getInt("wild.distances.short.distance", 10));
+                p.closeInventory();
 
             }
             else if(e.getSlot() == 13)
             {
-                if(!Utils.isBeginner(p)) {
-
-                    if (econ.getBalance(p) < plugin.getConfig().getInt("wild.distances.medium.distance", 5000)) {
-                        Utils.errorAsItem(e.getCurrentItem(), Utils.getLang("no-money"));
-                        return;
-                    }
-
-                }
-
-                Wild.randomTeleport(p, p.getWorld(), plugin.getConfig().getInt("wild.distances.medium.price", 10));
+                Wild.randomTeleport(p, p.getWorld(), plugin.getConfig().getInt("wild.distances.medium.distance", 10));
+                p.closeInventory();
             }
             else if(e.getSlot() == 15)
             {
-
-                if(!Utils.isBeginner(p)) {
-
-                    if (econ.getBalance(p) < plugin.getConfig().getInt("wild.distances.long.distance", 5000)) {
-                        Utils.errorAsItem(e.getCurrentItem(), Utils.getLang("no-money"));
-                        return;
-                    }
-
-                }
-
-                Wild.randomTeleport(p, p.getWorld(), plugin.getConfig().getInt("wild.distances.long.price", 10));
-
+                Wild.randomTeleport(p, p.getWorld(), plugin.getConfig().getInt("wild.distances.long.distance", 10));
+                p.closeInventory();
             }
 
             else if(e.getSlot() == 31 && !Config.biomesEnabled() && Config.structuresEnabled())
@@ -98,9 +73,6 @@ public class Events implements Listener {
                 Menus.openStructuresMenu(p);
                 return;
             }
-
-
-            p.closeInventory();
 
         }
 
@@ -144,12 +116,12 @@ public class Events implements Listener {
                 for(String s : plugin.getConfig().getConfigurationSection("structures.options").getKeys(false))
                 {
 
-                    if(plugin.getConfig().getString("structures.options." + s + ".type", "STONE").equalsIgnoreCase(n))
+                    if(Utils.parse(Utils.setCapitals(plugin.getConfig().getString("structures.options." + s + ".type", "STONE").toLowerCase().replace("_", " "))).equalsIgnoreCase(n))
                     {
 
                         if(bal < Config.getPrice(s))
                         {
-                            Utils.errorAsItem(e.getCurrentItem(), Utils.getLang("no-money"));
+                            Utils.sendParsed(p, Utils.getLang("no-money"));
                             return;
                         }
 
@@ -169,10 +141,10 @@ public class Events implements Listener {
 
                 }
 
-
+                p.closeInventory();
 
             }
-            p.closeInventory();
+
 
         }
 
@@ -202,12 +174,12 @@ public class Events implements Listener {
                 for(String s : plugin.getConfig().getConfigurationSection("biomes.options").getKeys(false))
                 {
 
-                    if(plugin.getConfig().getString("biomes.options." + s + ".type", "STONE").equalsIgnoreCase(n))
+                    if(Utils.parse(Utils.setCapitals(plugin.getConfig().getString("biomes.options." + s + ".type", "STONE").toLowerCase().replace("_", " "))).equalsIgnoreCase(n))
                     {
 
-                        if(bal < Config.getPrice(s))
+                        if(bal < Config.getBiomePrice(s))
                         {
-                            Utils.errorAsItem(e.getCurrentItem(), Utils.getLang("no-money"));
+                            Utils.sendParsed(p, Utils.getLang("no-money"));
                             return;
                         }
 
@@ -227,10 +199,10 @@ public class Events implements Listener {
 
                 }
 
-
+                p.closeInventory();
 
             }
-            p.closeInventory();
+
 
         }
 

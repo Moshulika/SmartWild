@@ -6,12 +6,12 @@
 
 main: com.Moshu.SmartWild.Main
 name: SmartWild
-version: 19.8.22
+version: 24.07.2024
 description: A better wild plugin
 author: Moshu
 website: mc.b-zone.ro
 softdepend: [Vault, WorldGuard, ChunkyBorder, MiniMessage]
-api-version: "1.19"
+api-version: "1.21"
 libraries:
   - "net.kyori:adventure-api:4.11.0"
 

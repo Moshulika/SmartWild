@@ -114,7 +114,7 @@ biomes:
         - "Price: 100"
 
 #Attention! Depending on your platform, you need to use different formatting codes!
-#For Paper users - use the new MiniMessage format, it is awesome: https://webui.adventure.kyori.net/
+#For Paper users - use the new MiniMessage format, it is awesome: https://webui.adventure.kyori.net/ - not working for certain stuff
 #For Spigot or other platforms - use the old color codes (&c, &f), or use HEX like this: #80C7FDHello!
 
 messages:

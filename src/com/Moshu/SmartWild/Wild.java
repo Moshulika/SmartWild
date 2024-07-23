@@ -25,8 +25,6 @@ public class Wild {
     public static void randomTeleport(Player p, World world, int distance)
     {
 
-        if(!Utils.hasMoney(p, distance)) return;
-
         if(!Config.getEnabledWorlds().contains(world.getName())) return;
 
         if(world.getEnvironment() != World.Environment.NORMAL)
@@ -48,6 +46,8 @@ public class Wild {
             c.error();
             return;
         }
+
+        if(!Utils.hasMoney(p, distance)) return;
 
         BukkitRunnable run = new BukkitRunnable()
         {

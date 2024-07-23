@@ -62,7 +62,15 @@ public class Utils
      */
     public static boolean isPaper()
     {
-        return Bukkit.getVersion().contains("Paper");
+        boolean isPaper = false;
+        try {
+            Class.forName("com.destroystokyo.paper.ParticleBuilder");
+            isPaper = true;
+        } catch (ClassNotFoundException ignored) {
+        }
+
+        return isPaper;
+
     }
 
     /**
@@ -101,7 +109,6 @@ public class Utils
                 }
 
                 EconomyResponse r = econ.withdrawPlayer(p, plugin.getConfig().getInt("wild.distances.short.price", 5000));
-
                 return r.transactionSuccess();
 
             }
@@ -114,7 +121,6 @@ public class Utils
                 }
 
                 EconomyResponse r = econ.withdrawPlayer(p, plugin.getConfig().getInt("wild.distances.medium.price", 5000));
-
                 return r.transactionSuccess();
             }
             else if(distance == plugin.getConfig().getInt("wild.distances.long.distance", 5000))
@@ -126,7 +132,6 @@ public class Utils
                 }
 
                 EconomyResponse r = econ.withdrawPlayer(p, plugin.getConfig().getInt("wild.distances.long.price", 5000));
-
                 return r.transactionSuccess();
             }
 

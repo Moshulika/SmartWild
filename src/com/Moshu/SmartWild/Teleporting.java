@@ -5,6 +5,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BiomeSearchResult;
 
 public class Teleporting {
 
@@ -23,7 +24,7 @@ public class Teleporting {
 
         });
 
-        c = new Cooldown(p.getUniqueId(), "biome", Config.getStructuresCooldown());
+        c = new Cooldown(p.getUniqueId(), "biome", Config.getBiomesCooldown());
 
         if (c.has() && !p.hasPermission("smartwild.admin")) {
             c.error();
@@ -38,7 +39,16 @@ public class Teleporting {
             @Override
             public void run() {
 
-                Location lok = w.locateNearestBiome(p.getLocation(), type, Locations.getBorder(w));
+
+                BiomeSearchResult restult = w.locateNearestBiome(p.getLocation(), Locations.getBorder(w), type);
+
+                if(restult == null)
+                {
+                    Utils.sendParsed(p, Utils.getLang("no-biomes"));
+                    return;
+                }
+
+                Location lok = restult.getLocation();
 
                 if(lok == null)
                 {

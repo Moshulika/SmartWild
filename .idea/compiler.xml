@@ -9,8 +9,5 @@
         <module name="SmartWild" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="SmartWild" target="16" />
-    </bytecodeTargetLevel>
   </component>
 </project>
